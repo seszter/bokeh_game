@@ -7,4 +7,4 @@ dependencies:
   - pip
   - pip:
     - jupyter-server-proxy
-    - pandas-bokeh=0.4
+    - pandas-bokeh==0.4
