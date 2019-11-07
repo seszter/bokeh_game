@@ -3,6 +3,7 @@ dependencies:
   - pandas
   - geopandas
   - numpy
+  - requests
   - pip
   - pip:
     - jupyter-server-proxy
