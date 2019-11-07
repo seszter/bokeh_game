@@ -2,8 +2,8 @@ dependencies:
   - bokeh
   - pandas
   - geopandas
-  - pandas-bokeh
   - numpy
   - pip
   - pip:
     - jupyter-server-proxy
+    - pandas-bokeh
