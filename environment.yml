@@ -4,7 +4,6 @@ dependencies:
   - geopandas=0.6.1
   - numpy=1.17.2
   - requests
-  - os
   - pathlib
   - pip
   - pip:
