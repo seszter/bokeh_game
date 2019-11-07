@@ -1,0 +1,12 @@
+html {
+    width: 80%;
+}
+body {
+    min-width: 600px;
+    max-width: 900px;
+    width: 75%;
+    background: #D5DADD;
+}
+.content {
+    margin: 1em;
+}
