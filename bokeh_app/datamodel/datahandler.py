@@ -2,6 +2,7 @@ import pandas as pd
 import geopandas
 import numpy as np
 import pandas_bokeh
+import os
 
 class DataModel:
     def __init__(self):
@@ -14,8 +15,8 @@ class DataModel:
         world.replace({'United States of America': 'United States',
                        'Russia': 'Russian Federation'}, inplace=True)
         self.world = world
-        self.tab1Data = pd.read_csv('bokeh_data.csv')
-        df = pd.read_csv('df_toplot.csv')
+        self.tab1Data = pd.read_csv('./bokeh_app/bokeh_data.csv')
+        df = pd.read_csv('./bokeh_app/df_toplot.csv')
         df['year_corrected'] = np.where(df.indicator.isin(['born_male', 'expected_to_survive_age65', 'urban']),
                                         df['Year'], df['Year'] - 20)
         yaxismap = {'born_male': 8,
