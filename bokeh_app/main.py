@@ -15,8 +15,23 @@ from bokeh.models.widgets import Tabs, Panel
 import numpy as np
 from datamodel import datahandler
 import pandas_bokeh
+import os
+import pathlib
 
-data_model = datahandler.DataModel()
+# Define paths.
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+PATH_DATA = pathlib.Path(os.path.join(dir_path, 'data'))
+PATH_OUTPUT = pathlib.Path(os.path.join(dir_path, 'output'))
+if not PATH_OUTPUT.exists():
+    PATH_OUTPUT.mkdir()
+
+PATH_DATA = pathlib.Path(os.path.join(dir_path, 'data'))
+PATH_OUTPUT = pathlib.Path(os.path.join(dir_path, 'output'))
+if not PATH_OUTPUT.exists():
+    PATH_OUTPUT.mkdir()
+
+data_model = datahandler.DataModel(PATH_DATA)
 lucknum = data_model.return_luck()
 layout2 = lyt()
 
@@ -76,6 +91,26 @@ button = Button(label='Get my luck number!')
 button.on_event(ButtonClick, luck)
 
 text_input = TextInput(value="Birth Year", title="")
+world = data_model.return_world()
+mapplot = world[world.name == 'Japan'].plot_bokeh(
+    figsize=(900, 600),
+    simplify_shapes=5000,
+    xlim=(-170, 170),
+    ylim=(-40, 70),
+    show_colorbar=False,
+    color='white',
+    line_color='white',
+    tile_provider='CARTODBPOSITRON',
+    show_figure=False,
+    toolbar_location=None,
+    xlabel=None,
+    ylabel=None,
+    legend=False)
+mapplot.axis.visible = False
+mapplot.min_border_left = 0
+mapplot.min_border_right = 0
+mapplot.min_border_bottom = 0
+mapplot.min_border_top = 0
 
 layout1 = lyt(children=[row(
     column(widgetbox(text_input))
