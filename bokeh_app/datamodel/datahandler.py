@@ -7,9 +7,9 @@ import pandas_bokeh
 
 class DataModel():
     def __init__(self, PATH_DATA):
-        self.lucknum = 0
+        self.lucknum = 54
         self.byear = 1961
-        self.country = 'Norway'
+        self.country = 'United States'
         world = geopandas.read_file(
             geopandas.datasets.get_path('naturalearth_lowres')
         )
@@ -20,6 +20,8 @@ class DataModel():
         df = pd.read_csv(PATH_DATA/'df_toplot.csv')
         df['year_corrected'] = np.where(df.indicator.isin(['born_male', 'expected_to_survive_age65', 'urban']),
                                         df['Year'], df['Year'] - 20)
+        df['val'] = np.where((df['val'].isnull()) & (df['indicator'] == 'born_male'), 50, df['val'])
+        df['valper2'] = df['val']/2
         yaxismap = {'born_male': 8,
                     'expected_to_survive_age65': 6,
                     'emplyoed': 4,

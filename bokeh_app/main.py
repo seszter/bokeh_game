@@ -97,10 +97,10 @@ def byear(attrname, old, new):
 
 
 ### WIDGETS
-button = Button(label="How lucky I am", width=130)
+button = Button(label="How lucky am I", width=130)
 button.on_event(ButtonClick, luck)
 
-text_input = TextInput(value="Birth Year", title="", width=130)
+text_input = TextInput(value="I was born in", title="", width=130)
 world = data_model.return_world()
 mapplot = world[world.name == 'Japan'].plot_bokeh(
     figsize=(900, 600),
@@ -132,7 +132,8 @@ layout1 = lyt(children=[
 text_input.on_change('value', byear)
 
 
-tabs = Tabs(tabs=[Panel(child=layout1, title='My Luck')])
+tabs = Tabs(tabs=[Panel(child=layout1, title='My Luck'),
+                  Panel(child=layout2, title='My life')])
 
 
 ### TAB 2
@@ -162,14 +163,24 @@ def tab2_plotting():
                    text_font='Frontage Outline')
     plot.add_layout(label2)
 
-    label3 = Label(x=100 - data_model.return_luck(), y=9.5, text='top {}%'.format(100 - data_model.return_luck()),
+    label3 = Label(x=100 - data_model.return_luck(), y=9.8, text=str(data_model.return_luck()),
                    text_font_size='20pt',
-                   text_color='#827262',
+                   text_color='#ACCD33',
                    text_align='center',
-                   text_font_style='normal',
+                   text_font_style='bold',
                    text_baseline='middle',
                    text_font='Frontage Outline')
     plot.add_layout(label3)
+
+    for i in range(10,100,10):
+        label4 = Label(x=i, y=9.5, text=str(100-i),
+                       text_font_size='20pt',
+                       text_color='#827262',
+                       text_align='center',
+                       text_font_style='normal',
+                       text_baseline='middle',
+                       text_font='Frontage Outline')
+        plot.add_layout(label4)
 
     for k, v in data_model.return_labelsmap().items():
         plot.add_layout(Label(x=2, y=v, text=k,
@@ -192,8 +203,8 @@ def tab2_plotting():
         width='val',
         height=0.8
     )
-    plot.add_layout(Whisker(base=100 - data_model.return_luck(), lower=-1, upper=9,
-                            line_width=3, line_color='#827262', line_dash='dashed',
+    plot.add_layout(Whisker(base=100 - data_model.return_luck(), lower=-1, upper=9.7,
+                            line_width=3, line_color='#ACCD33', line_dash='dashed',
                             upper_head=None, lower_head=None))
 
     plot.axis.visible = False
