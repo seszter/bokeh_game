@@ -3,10 +3,12 @@ html {
 }
 body {
     min-width: 600px;
-    max-width: 900px;
+    max-width: 30000px;
     width: 75%;
     background: #D5DADD;
+}
 }
 .content {
     margin: 1em;
 }
+

@@ -1,5 +1,5 @@
 from bokeh.io import curdoc
-from bokeh.layouts import widgetbox, column, row
+from bokeh.layouts import widgetbox, column, row, gridplot
 from bokeh.layouts import layout as lyt
 from bokeh.models.widgets import TextInput,  Div
 from bokeh.events import ButtonClick
@@ -36,27 +36,33 @@ lucknum = data_model.return_luck()
 layout2 = lyt()
 
 ### TAB 1
-pre = Div(text="", width=100, height=300, style={'font-size': '600%', 'color': 'blue'})
-country_text = Div(text='', width=1000, height=50, style={'font-size': '200%', 'color': 'blue'})
-chance_text = Div(text='', width=1000, height=20, style={'font-size': '100%', 'color': 'blue'})
+pre = Div(text="<b>&nbsp;</b>", width=200, height=300, style={'font-size': '600%', 'color': '#827262'})
+country_text = Div(text='', width=1600, height=50, style={'font-size': '150%', 'color': '#827262'})
+
+#ch_text = '0' + ' - '*62 + '50' + ' - '*62 + '100'
+ch_text = '0' + ' - '*124 + '100'
+#ch_text = """This is a <span style="color: red;font-weight:bold">red</span> word in a sentence"""
+chance_text = Div(text=ch_text, width=1600, height=30, style={'font-size': '150%', 'color': '#827262'})
 
 
 def luck(event):
     data_model.change_luck()
     lucknum = data_model.return_luck()
-    pre.text = '<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{}</b>'.format(lucknum)
+    step = 100 / 124
+    lucknum_place = int(lucknum / step)
+    lucknum_str = """<span style="color: #ACCD33;font-weight:bold">{}</span>""".format(lucknum)
+    chance_text.text = '0' + ' - '*lucknum_place + str(lucknum_str) + ' - '*(124 - lucknum_place - 2) + '100'
     layout2 = tab2_plotting()
 
-    tabs.tabs = [Panel(child=layout1, title='aaaa'),
-                 Panel(child=layout2, title='bbbb')]
+    tabs.tabs = [Panel(child=layout1, title='My luck'),
+                 Panel(child=layout2, title='My life')]
 
 
 def byear(attrname, old, new):
     year = text_input.value
     data_model.change_byear(year)
     c, chance = data_model.draw_country(year)
-    country_text.text = '<b>{}</b>'.format(c)
-    chance_text.text = '<b>you had {}% chance to be born here</b>'.format(chance)
+    country_text.text = '<b>{}, you had {}% chance to be born here</b>'.format(c,chance)
     world = data_model.return_world()
     mapplot = world[world.name == c].plot_bokeh(
         figsize=(900, 600),
@@ -64,7 +70,8 @@ def byear(attrname, old, new):
         xlim=(-170, 170),
         ylim=(-40, 70),
         show_colorbar=False,
-        colormap=['green'],
+        color='#827262',
+        line_color='#827262',
         tile_provider='CARTODBPOSITRON',
         show_figure=False,
         toolbar_location=None,
@@ -76,21 +83,27 @@ def byear(attrname, old, new):
     mapplot.min_border_right = 0
     mapplot.min_border_bottom = 0
     mapplot.min_border_top = 0
-    layout1.children = [row(
-        column(widgetbox(text_input), widgetbox(country_text), widgetbox(chance_text), mapplot),
-        column(widgetbox(button),widgetbox(pre))
-    )]
+    mapplot.sizing_mode = 'scale_both'
+    #layout1.children = [row(
+    #    column(widgetbox(text_input), widgetbox(country_text), widgetbox(chance_text), mapplot),
+    #    column(widgetbox(button),widgetbox(pre))
+    #)]
+    layout1.children = [
+        column(row(widgetbox(button), widgetbox(chance_text)),
+               row(widgetbox(text_input), widgetbox(country_text)),
+               row(widgetbox(pre), mapplot, widgetbox(pre)))
+                    ]
     layout2 = tab2_plotting()
 
-    tabs.tabs = [Panel(child=layout1, title='aaaa'),
-                 Panel(child=layout2, title='bbbb')]
+    tabs.tabs = [Panel(child=layout1, title='My luck'),
+                 Panel(child=layout2, title='My life')]
 
 
 ### WIDGETS
-button = Button(label='Get my luck number!')
+button = Button(label='Get my luck number!', width=130)
 button.on_event(ButtonClick, luck)
 
-text_input = TextInput(value="Birth Year", title="")
+text_input = TextInput(value="Birth Year", title="", width=130)
 world = data_model.return_world()
 mapplot = world[world.name == 'Japan'].plot_bokeh(
     figsize=(900, 600),
@@ -111,15 +124,18 @@ mapplot.min_border_left = 0
 mapplot.min_border_right = 0
 mapplot.min_border_bottom = 0
 mapplot.min_border_top = 0
+mapplot.sizing_mode = 'scale_both'
 
-layout1 = lyt(children=[row(
-    column(widgetbox(text_input))
-)], sizing_mode='scale_both')
+layout1 = lyt(children=[
+    column(row(widgetbox(button),widgetbox(chance_text)),
+           row(widgetbox(text_input),widgetbox(country_text)),
+           row(widgetbox(pre),mapplot,widgetbox(pre)))
+])
 
 text_input.on_change('value', byear)
 
 
-tabs = Tabs(tabs=[Panel(child=layout1, title='aaaa')])
+tabs = Tabs(tabs=[Panel(child=layout1, title='My Luck')])
 
 
 ### TAB 2
