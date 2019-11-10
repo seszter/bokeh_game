@@ -49,8 +49,8 @@ def luck(event):
     data_model.change_luck()
     lucknum = data_model.return_luck()
     step = 100 / 124
-    lucknum_place = int(lucknum / step)
-    lucknum_str = """<span style="color: #ACCD33;font-weight:bold">{}</span>""".format(lucknum)
+    lucknum_place = int((lucknum) / step)
+    lucknum_str = """<span style="color: #827262;font-weight:bold">{}</span>""".format(lucknum)
     chance_text.text = '0' + ' - '*lucknum_place + str(lucknum_str) + ' - '*(124 - lucknum_place - 2) + '100'
     layout2 = tab2_plotting()
 
@@ -62,7 +62,8 @@ def byear(attrname, old, new):
     year = text_input.value
     data_model.change_byear(year)
     c, chance = data_model.draw_country(year)
-    country_text.text = '<b>{}, you had {}% chance to be born here</b>'.format(c,chance)
+    country_text.text = """<b><span style="font-weight:bold">{}</span>
+    <span style="font-weight:normal">, you had {}% chance to be born here</span></b>""".format(c, chance)
     world = data_model.return_world()
     mapplot = world[world.name == c].plot_bokeh(
         figsize=(900, 600),
@@ -70,8 +71,8 @@ def byear(attrname, old, new):
         xlim=(-170, 170),
         ylim=(-40, 70),
         show_colorbar=False,
-        color='#827262',
-        line_color='#827262',
+        color='#ACCD33',
+        line_color='#ACCD33',
         tile_provider='CARTODBPOSITRON',
         show_figure=False,
         toolbar_location=None,
@@ -84,10 +85,6 @@ def byear(attrname, old, new):
     mapplot.min_border_bottom = 0
     mapplot.min_border_top = 0
     mapplot.sizing_mode = 'scale_both'
-    #layout1.children = [row(
-    #    column(widgetbox(text_input), widgetbox(country_text), widgetbox(chance_text), mapplot),
-    #    column(widgetbox(button),widgetbox(pre))
-    #)]
     layout1.children = [
         column(row(widgetbox(button), widgetbox(chance_text)),
                row(widgetbox(text_input), widgetbox(country_text)),
@@ -100,7 +97,7 @@ def byear(attrname, old, new):
 
 
 ### WIDGETS
-button = Button(label='Get my luck number!', width=130)
+button = Button(label="How lucky I am", width=130)
 button.on_event(ButtonClick, luck)
 
 text_input = TextInput(value="Birth Year", title="", width=130)
@@ -165,7 +162,7 @@ def tab2_plotting():
                    text_font='Frontage Outline')
     plot.add_layout(label2)
 
-    label3 = Label(x=data_model.return_luck(), y=9.5, text='Luck limit',
+    label3 = Label(x=100 - data_model.return_luck(), y=9.5, text='top {}%'.format(100 - data_model.return_luck()),
                    text_font_size='20pt',
                    text_color='#827262',
                    text_align='center',
@@ -195,8 +192,8 @@ def tab2_plotting():
         width='val',
         height=0.8
     )
-    plot.add_layout(Whisker(base= data_model.return_luck(), lower=-1, upper=9,
-                            line_width=3, line_color='#ACCD33', line_dash='dashed',
+    plot.add_layout(Whisker(base=100 - data_model.return_luck(), lower=-1, upper=9,
+                            line_width=3, line_color='#827262', line_dash='dashed',
                             upper_head=None, lower_head=None))
 
     plot.axis.visible = False
@@ -220,9 +217,9 @@ def tab2_plotting():
     layout2 = lyt([
         [plot],
         [slider],
-    ], sizing_mode='scale_width')
+    ], sizing_mode='scale_both')
     return layout2
 
 
 curdoc().add_root(tabs)
-curdoc().title = "Gapminder"
+curdoc().title = "Life chances"

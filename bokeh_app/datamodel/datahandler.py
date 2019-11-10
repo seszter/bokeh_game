@@ -79,9 +79,17 @@ class DataModel():
 
     def return_country_data(self):
         temp = self.tab2Data[self.tab2Data.country == self.country].copy()
-        temp['color'] = np.where(temp['val'] >= self.lucknum, '#ACCD33', '#FFC45F')
+        temp['color'] = np.where(temp['val'] >= (100 - self.lucknum), '#ACCD33', '#FFC45F')
         data = {}
         for year in temp.year_corrected.tolist():
             df_year = temp[temp.year_corrected == year][['yaxis', 'val', 'valper2', 'color']]
             data[year] = df_year.to_dict('series')
         return data
+
+    def return_luck_colors(self):
+        temp = self.tab2Data[self.tab2Data.country == self.country].copy()
+        temp['color'] = np.where(temp['val'] > self.lucknum, '#ACCD33', '#FFC45F')
+        color_dict = {}
+        for y in temp['yaxis'].unique():
+            color_dict[y] = temp[temp['yaxis']==y]['color'].iloc[0]
+        return color_dict
